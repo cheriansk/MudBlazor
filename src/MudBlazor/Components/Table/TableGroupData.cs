@@ -19,6 +19,9 @@ public class TableGroupData<TKey, TElement>
     /// The label of this group.
     /// </summary>
     public string? GroupName { get; }
+    public string? GroupHeader_Ext { get; set; }
+    public string? Id_Ext { get; set; }
+    public bool? IsLinked_Ext { get; set; }
 
     /// <summary>
     /// The unique key of this group.
@@ -36,10 +39,17 @@ public class TableGroupData<TKey, TElement>
     /// <param name="groupName">The label of this group.</param>
     /// <param name="key">The unique key of this group.</param>
     /// <param name="items">The data rows for this group.</param>
-    public TableGroupData(string? groupName, TKey? key, IEnumerable<TElement> items)
+    /// <param name="groupHeader_Ext">head description.</param>
+    /// <param name="id_Ext">Unique Id for the row.</param>
+    /// <param name="isLinked_Ext">If this row is linked to another or not.</param>
+    public TableGroupData(string? groupName, TKey? key, IEnumerable<TElement> items, string? groupHeader_Ext,string? id_Ext, bool? isLinked_Ext)
     {
         GroupName = groupName;
         Key = key;
         Items = items;
+        GroupHeader_Ext = groupHeader_Ext;
+        Id_Ext = id_Ext;
+        IsLinked_Ext = isLinked_Ext;
+
     }
 }

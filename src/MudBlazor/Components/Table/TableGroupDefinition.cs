@@ -44,6 +44,11 @@ namespace MudBlazor
         /// </summary>
         public string? GroupName { get; set; }
 
+        public Func<T, String>? GroupHeader_Ext { get; set; }
+
+        public Func<T, String>? Id_Ext { get; set; }
+        public Func<T, bool>? IsLinked_Ext { get; set; }
+
         /// <summary>
         /// The function which selects items for this group.
         /// </summary>
