@@ -105,7 +105,7 @@
   <PropertyGroup>
     <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_AddAnalyzersToOutput</TargetsForTfmSpecificContentInPackage>
     <PackageId>CsK.$(AssemblyName)</PackageId>
-    <Version>1.0.5</Version>
+    <Version>1.0.9</Version>
   </PropertyGroup>
   
   <!--Add analyzer to build output so it works transitively -->
