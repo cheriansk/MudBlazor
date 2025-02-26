@@ -229,5 +229,39 @@ namespace MudBlazor
         {
             get => (MudTable<T>?)((TableContext<T>?)Context)?.Table;
         }
+
+        private string? GetGroupHeader_Ext
+        {
+            get
+            {
+                if (this.GroupDefinition != null && this.GroupDefinition?.GroupHeader_Ext != null && this.Items != null)
+                {
+                    return this.GroupDefinition?.GroupHeader_Ext?.Invoke(this.Items.First());
+                }
+                return "NO HEADER";
+            }
+        }
+        private string? GetId_Ext
+        {
+            get
+            {
+                if (this.GroupDefinition != null && this.GroupDefinition?.Id_Ext != null && this.Items != null)
+                {
+                    return this.GroupDefinition?.Id_Ext?.Invoke(this.Items.First());
+                }
+                return "NO ID";
+            }
+        }
+        private bool? GetIsLinked_Ext
+        {
+            get
+            {
+                if (this.GroupDefinition != null && this.GroupDefinition?.IsLinked_Ext != null && this.Items != null)
+                {
+                    return this.GroupDefinition?.IsLinked_Ext?.Invoke(this.Items.First());
+                }
+                return false;
+            }
+        }
     }
 }

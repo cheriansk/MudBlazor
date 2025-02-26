@@ -29,7 +29,7 @@
             </div>
         </MudTd>
     }
-    @HeaderTemplate(new TableGroupData<object, T>(GroupDefinition?.GroupName, Items?.Key, Items?.ToList() ?? new List<T>()))
+    @HeaderTemplate(new TableGroupData<object, T>(GroupDefinition?.GroupName, Items?.Key, Items?.ToList() ?? new List<T>(),GetGroupHeader_Ext,GetId_Ext,GetIsLinked_Ext))
     @if ((Context?.Table?.Editable ?? false))
     {
         <MudTd />
@@ -69,7 +69,7 @@ else
             {
                 <MudTd/>
             }
-            @FooterTemplate(new TableGroupData<object, T>(GroupDefinition.GroupName, Items.Key, Items.ToList()))
+            @FooterTemplate(new TableGroupData<object, T>(GroupDefinition.GroupName, Items.Key, Items.ToList(), GetGroupHeader_Ext, GetId_Ext, GetIsLinked_Ext))
             @if ((Context?.Table.Editable ?? false))
             {
                 <MudTd />
