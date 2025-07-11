@@ -73,7 +73,7 @@ namespace MudBlazor
         /// </summary>
         /// <remarks>
         /// Defaults to <c>false</c>.
-        /// Can be overridden by <see cref="MudGlobal.Rounded"/>.
+        /// Override with <see cref="MudGlobal.Rounded"/>..
         /// </remarks>
         [Parameter]
         [Category(CategoryTypes.Table.Appearance)]
@@ -105,6 +105,16 @@ namespace MudBlazor
         [Parameter]
         [Category(CategoryTypes.Table.Appearance)]
         public bool Dense { get; set; }
+
+        /// <summary>
+        /// The CSS classes applied to all cells of the table.
+        /// </summary>
+        /// <remarks>
+        /// Multiple classes must be separated by spaces.
+        /// </remarks>
+        [Parameter]
+        [Category(CategoryTypes.Table.Appearance)]
+        public string? CellClass { get; set; }
 
         /// <summary>
         /// Highlights rows when hovering over them.

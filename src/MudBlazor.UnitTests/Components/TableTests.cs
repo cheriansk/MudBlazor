@@ -13,6 +13,15 @@ namespace MudBlazor.UnitTests.Components
     [TestFixture]
     public class TableTests : BunitTest
     {
+        [Test]
+        public void CustomTableClass()
+        {
+            var comp = Context.RenderComponent<TableRowClickTest>();
+            var table = comp.FindComponent<MudTable<int>>();
+            table.SetParametersAndRender(parameters => parameters.Add(x => x.TableClass, "table-custom-class"));
+            table.Markup.Should().Contain("class=\"mud-table-root table-custom-class\"");
+        }
+
         /// <summary>
         /// OnRowClick event callback should be fired regardless of the selection state
         /// </summary>
@@ -1297,25 +1306,25 @@ namespace MudBlazor.UnitTests.Components
             var comp = Context.RenderComponent<TableServerSideDataTest5>();
             comp.Find("#counter").TextContent.Should().Be("1"); //initial counter
 
-            comp.Find("span.mud-button-root.mud-table-sort-label").Click(); // sort
+            comp.Find("span.mud-clickable.mud-table-sort-label").Click(); // sort
             comp.Find("#counter").TextContent.Should().Be("2");
 
-            comp.Find("span.mud-button-root.mud-table-sort-label").Click(); // sort
+            comp.Find("span.mud-clickable.mud-table-sort-label").Click(); // sort
             comp.Find("#counter").TextContent.Should().Be("3");
 
-            comp.Find("span.mud-button-root.mud-table-sort-label").Click(); // sort
+            comp.Find("span.mud-clickable.mud-table-sort-label").Click(); // sort
             comp.Find("#counter").TextContent.Should().Be("4");
 
             comp.Find("#reseter").Click(); //reset counter and test again
             comp.Find("#counter").TextContent.Should().Be("0");
 
-            comp.Find("span.mud-button-root.mud-table-sort-label").Click(); // sort
+            comp.Find("span.mud-clickable.mud-table-sort-label").Click(); // sort
             comp.Find("#counter").TextContent.Should().Be("1");
 
-            comp.Find("span.mud-button-root.mud-table-sort-label").Click(); // sort
+            comp.Find("span.mud-clickable.mud-table-sort-label").Click(); // sort
             comp.Find("#counter").TextContent.Should().Be("2");
 
-            comp.Find("span.mud-button-root.mud-table-sort-label").Click(); // sort
+            comp.Find("span.mud-clickable.mud-table-sort-label").Click(); // sort
             comp.Find("#counter").TextContent.Should().Be("3");
         }
 
@@ -1449,15 +1458,15 @@ namespace MudBlazor.UnitTests.Components
             tds[2].TextContent.Trim().Should().Be("2");
             tds[3].TextContent.Trim().Should().Be("3");
 
-            trs[1].GetAttribute("style").Contains("color: red");
-            trs[2].GetAttribute("style").Contains("color: red");
-            trs[3].GetAttribute("style").Contains("color: blue");
-            trs[4].GetAttribute("style").Contains("color: blue");
+            trs[1].GetAttribute("style").Should().Contain("color: red");
+            trs[2].GetAttribute("style").Should().Contain("color: red");
+            trs[3].GetAttribute("style").Should().Contain("color: blue");
+            trs[4].GetAttribute("style").Should().Contain("color: blue");
 
-            trs[1].GetAttribute("class").Contains("even");
-            trs[2].GetAttribute("class").Contains("odd");
-            trs[3].GetAttribute("class").Contains("even");
-            trs[4].GetAttribute("class").Contains("odd");
+            trs[1].GetAttribute("class").Should().Contain("even");
+            trs[2].GetAttribute("class").Should().Contain("odd");
+            trs[3].GetAttribute("class").Should().Contain("even");
+            trs[4].GetAttribute("class").Should().Contain("odd");
         }
 
         public class TableRowValidatorTest : TableRowValidator
@@ -2201,10 +2210,10 @@ namespace MudBlazor.UnitTests.Components
         /// Tests the correct output when filter does not return any matching elements
         /// </summary>
         [Test]
-        public void TablePagerInfoTextTest()
+        public void TablePagerInfoTextTest1()
         {
             // create the component
-            var tableComponent = Context.RenderComponent<TablePagerInfoTextTest>();
+            var tableComponent = Context.RenderComponent<TablePagerInfoTextTest1>();
 
             // print the generated html
 
@@ -2233,6 +2242,23 @@ namespace MudBlazor.UnitTests.Components
         }
 
         /// <summary>
+        /// Tests the correct output when custom info format provided
+        /// </summary>
+        [Test]
+        [TestCase("", "1-3 of 3")]
+        [TestCase("Test", "Test")]
+        [TestCase("{first_item}-{last_item}/{all_items}", "1-3/3")]
+        public void TablePagerInfoTextTest2(string infoFormat, string expectedInfoText)
+        {
+            // create the component
+            var tableComponent = Context.RenderComponent<TablePagerInfoTextTest2>(parameters => parameters
+                .Add(p => p.InfoFormat, infoFormat));
+
+            // assert correct info-text
+            tableComponent.Find("div.mud-table-page-number-information").Text().Should().Be(expectedInfoText);
+        }
+
+        /// <summary>
         /// Tests the aria-labels for the pager control buttons
         /// </summary>
         /// <param name="controlButton">The type of the control button. Page.First for the navigate-to-first-page button.</param>
@@ -2244,7 +2270,7 @@ namespace MudBlazor.UnitTests.Components
         [Test]
         public void TablePagerControlButtonAriaLabelTest(Page controlButton, string expectedButtonAriaLabel)
         {
-            var tableComponent = Context.RenderComponent<TablePagerInfoTextTest>();
+            var tableComponent = Context.RenderComponent<TablePagerInfoTextTest1>();
 
             //get control button
             var buttons = tableComponent.FindAll("div.mud-table-pagination-actions button");
@@ -2518,6 +2544,23 @@ namespace MudBlazor.UnitTests.Components
             comp.FindAll(".mud-table-pagination-actions .mud-button-root")[2].Click();
             comp.WaitForAssertion(() => table.CurrentPage.Should().Be(2));
             comp.WaitForAssertion(() => comp.Find(".mud-table-body .mud-table-row .mud-table-cell").TextContent.Should().Be("3"));
+        }
+
+        [Test]
+        [TestCase(SortDirection.None)]
+        [TestCase(SortDirection.Ascending)]
+        [TestCase(SortDirection.Descending)]
+        public void TableSortLabelDirectionClasses(SortDirection direction)
+        {
+            var comp = Context.RenderComponent<MudTableSortLabel<string>>(parameters => parameters
+                .Add(p => p.SortDirection, direction)
+            );
+
+            var icon = comp.Find(".mud-table-sort-label-icon");
+
+            icon.ClassList.Should().Contain("mud-table-sort-label-icon");
+            icon.ClassList.Contains("mud-direction-asc").Should().Be(direction == SortDirection.Ascending);
+            icon.ClassList.Contains("mud-direction-desc").Should().Be(direction == SortDirection.Descending);
         }
     }
 }

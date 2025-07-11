@@ -35,7 +35,6 @@ public class MudStep : MudComponentBase, IAsyncDisposable
     internal ParameterState<bool> HasErrorState { get; private set; }
 
     internal string Styles => new StyleBuilder()
-        .AddStyle(Parent?.StepStyle)
         .AddStyle(Style)
         .Build();
 
@@ -46,9 +45,9 @@ public class MudStep : MudComponentBase, IAsyncDisposable
 
     internal string LabelIconClassname =>
         new CssBuilder("mud-step-label-icon")
-            .AddClass($"mud-{(CompletedStepColor.HasValue ? CompletedStepColor.Value.ToDescriptionString() : Parent?.CompletedStepColor.ToDescriptionString())}", CompletedState && !HasErrorState && Parent?.CompletedStepColor != Color.Default && Parent?.ActiveStep != this)
+            .AddClass($"mud-{(CompletedStepColor.HasValue ? CompletedStepColor.Value.ToDescriptionString() : Parent?.CompletedStepColor.ToDescriptionString())}", CompletedState && !HasErrorState && Parent?.CompletedStepColor != Color.Default && (Parent?.ActiveStep != this || (Parent?.IsCompleted == true && Parent?.NonLinear == false)))
             .AddClass($"mud-{(ErrorStepColor.HasValue ? ErrorStepColor.Value.ToDescriptionString() : Parent?.ErrorStepColor.ToDescriptionString())}", HasErrorState)
-            .AddClass($"mud-{Parent?.CurrentStepColor.ToDescriptionString()}", Parent?.ActiveStep == this)
+            .AddClass($"mud-{Parent?.CurrentStepColor.ToDescriptionString()}", Parent?.ActiveStep == this && !(Parent?.IsCompleted == true && Parent?.NonLinear == false))
             .Build();
 
     internal string LabelContentClassname =>
@@ -56,7 +55,8 @@ public class MudStep : MudComponentBase, IAsyncDisposable
             .AddClass($"mud-{(ErrorStepColor.HasValue ? ErrorStepColor.Value.ToDescriptionString() : Parent?.ErrorStepColor.ToDescriptionString())}-text", HasErrorState)
             .Build();
 
-    internal string Classname => new CssBuilder(Parent?.StepClassname)
+    internal string Classname => new CssBuilder()
+        .AddClass(Parent?.StepClassname)
         .AddClass(Class)
         .Build();
 
